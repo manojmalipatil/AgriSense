@@ -8,6 +8,7 @@ import SoilAnalysis from './components/SoilAnalysis';
 import TaskManager from './components/TaskManager';
 import ClimateTools from './components/ClimateTools';
 import About from './components/About';
+import KrishiMitra from './components/KrishiMitra';
 
 function App() {
   const [currentPage, setCurrentPage] = useState('home');
@@ -40,6 +41,7 @@ function App() {
       <main className="relative z-10">
         {renderCurrentPage()}
       </main>
+      <KrishiMitra />
     </div>
   );
 }
