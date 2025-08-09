@@ -4,6 +4,9 @@ import tensorflow as tf
 import numpy as np
 from PIL import Image
 import io
+from pydantic import BaseModel
+import requests
+import os
 
 app = FastAPI()
 
@@ -105,3 +108,34 @@ async def predict(file: UploadFile = File(...)):
 @app.get("/")
 async def root():
     return {"message": "Plant Disease Detection API is running!"}
+
+#Groq API integration
+
+GROQ_API_KEY = os.getenv("GROQ_API_KEY", "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")
+
+class ChatRequest(BaseModel):
+    message: str
+
+@app.post("/chat")
+async def chat_with_groq(data: ChatRequest):
+    url = "https://api.groq.com/openai/v1/chat/completions"
+    headers = {
+        "Authorization": f"Bearer {GROQ_API_KEY}",
+        "Content-Type": "application/json"
+    }
+
+    payload = {
+        "model": "llama3-8b-8192",  # Or "mixtral-8x7b-32768" for better reasoning
+        "messages": [
+            {"role": "system", "content": "You are KrishiMitra, an AI-powered digital farming assistant. Provide short, helpful, and friendly answers about agriculture, crop prices, soil health, pest control, and weather."},
+            {"role": "user", "content": data.message}
+        ],
+        "temperature": 0.7,
+        "max_tokens": 200
+    }
+
+    response = requests.post(url, headers=headers, json=payload)
+    response_data = response.json()
+
+    bot_reply = response_data["choices"][0]["message"]["content"].strip()
+    return {"reply": bot_reply}

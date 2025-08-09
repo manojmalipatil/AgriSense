@@ -30,67 +30,73 @@ const KrishiMitra: React.FC = () => {
     scrollToBottom();
   }, [messages]);
 
-  const getBotResponse = (userMessage: string): string => {
-    const message = userMessage.toLowerCase();
-    
-    if (message.includes('price') || message.includes('market')) {
-      return '💰 I can help you with crop prices! Current market rates show good demand for wheat and rice. Would you like specific price information for any particular crop?';
-    }
-    
-    if (message.includes('weather') || message.includes('rain')) {
-      return '🌦️ Weather is crucial for farming! Based on current forecasts, we expect moderate rainfall this week. Perfect for your crops! Need specific weather updates for your region?';
-    }
-    
-    if (message.includes('soil') || message.includes('fertilizer')) {
-      return '🌱 Soil health is the foundation of good farming! For optimal growth, ensure your soil has balanced NPK levels. Would you like me to guide you through soil testing?';
-    }
-    
-    if (message.includes('disease') || message.includes('pest')) {
-      return '🔍 Plant diseases can be detected early with proper monitoring. Upload images of affected plants in our Disease Detection tool for AI-powered analysis and treatment recommendations!';
-    }
-    
-    if (message.includes('crop') || message.includes('farming')) {
-      return '🚜 I\'m here to help with all your farming needs! From crop selection to harvest planning, soil management to pest control - what specific area would you like assistance with?';
-    }
-    
-    if (message.includes('hello') || message.includes('hi') || message.includes('namaste')) {
-      return '🙏 Namaste! Welcome to GreenLens. I\'m excited to help you with your agricultural journey. What farming challenge can I help you solve today?';
-    }
-    
-    if (message.includes('thank') || message.includes('thanks')) {
-      return '🌾 You\'re most welcome! Happy farming! Feel free to ask me anything about crops, weather, prices, or soil health anytime.';
-    }
-    
-    return '🤔 That\'s an interesting question! I specialize in crop management, weather updates, market prices, soil health, and disease detection. Could you tell me more about what specific farming help you need?';
+  const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+const recognition = new SpeechRecognition();
+recognition.lang = 'en-IN';
+recognition.interimResults = false;
+recognition.maxAlternatives = 1;
+
+const startListening = () => {
+  recognition.start();
+};
+
+recognition.onresult = (event: any) => {
+  const transcript = event.results[0][0].transcript;
+  setInputText(transcript);
+  handleSendMessage();
+};
+
+const speak = (text: string) => {
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = 'en-IN';
+  utterance.rate = 1;
+  window.speechSynthesis.speak(utterance);
+};
+
+  const getBotResponseFromAPI = async (userMessage: string): Promise<string> => {
+  try {
+    const res = await fetch("http://localhost:8000/chat", { // Change to your backend URL
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message: userMessage }),
+    });
+    const data = await res.json();
+    return data.reply;
+  } catch (error) {
+    console.error("Error fetching bot response:", error);
+    return "❌ Sorry, I couldn’t connect to the AI service.";
+  }
+};
+
+const handleSendMessage = async () => {
+  if (!inputText.trim()) return;
+
+  const userMessage: Message = {
+    id: Date.now().toString(),
+    text: inputText,
+    sender: "user",
+    timestamp: new Date(),
   };
 
-  const handleSendMessage = async () => {
-    if (!inputText.trim()) return;
+  setMessages(prev => [...prev, userMessage]);
+  setInputText("");
+  setIsTyping(true);
 
-    const userMessage: Message = {
-      id: Date.now().toString(),
-      text: inputText,
-      sender: 'user',
-      timestamp: new Date()
-    };
+  const botText = await getBotResponseFromAPI(inputText);
 
-    setMessages(prev => [...prev, userMessage]);
-    setInputText('');
-    setIsTyping(true);
-
-    // Simulate bot thinking time
-    setTimeout(() => {
-      const botResponse: Message = {
-        id: (Date.now() + 1).toString(),
-        text: getBotResponse(inputText),
-        sender: 'bot',
-        timestamp: new Date()
-      };
-      
-      setMessages(prev => [...prev, botResponse]);
-      setIsTyping(false);
-    }, 1000 + Math.random() * 1000);
+  const botResponse: Message = {
+    id: (Date.now() + 1).toString(),
+    text: botText,
+    sender: "bot",
+    timestamp: new Date(),
   };
+
+  setMessages(prev => [...prev, botResponse]);
+  setIsTyping(false);
+
+  speak(botText); // 🗣 KrishiMitra speaks here
+};
+
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
@@ -215,6 +221,12 @@ const KrishiMitra: React.FC = () => {
                   className="bg-green-500 hover:bg-green-600 disabled:bg-gray-300 text-white p-3 rounded-xl transition-colors duration-200 flex items-center justify-center"
                 >
                   <Send className="w-5 h-5" />
+                </button>
+                <button
+                  onClick={startListening}
+                  className="bg-yellow-500 hover:bg-yellow-600 text-white p-3 rounded-xl transition-colors duration-200 flex items-center justify-center"
+                  >
+                  🎤
                 </button>
               </div>
               <p className="text-xs text-green-600 mt-2 text-center">
