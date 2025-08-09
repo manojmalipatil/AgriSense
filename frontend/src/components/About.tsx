@@ -39,7 +39,7 @@ const About: React.FC = () => {
         <div className="text-center mb-16">
           <div className="inline-flex items-center space-x-3 bg-white rounded-full px-6 py-3 shadow-sm mb-8">
             <Leaf className="w-6 h-6 text-green-500" />
-            <span className="font-semibold text-gray-800">About GreenLens</span>
+            <span className="font-semibold text-gray-800">About AgriSense</span>
           </div>
           
           <h1 className="text-4xl md:text-6xl font-bold text-gray-800 mb-6">
@@ -71,7 +71,7 @@ const About: React.FC = () => {
         {/* Features Section */}
         <div className="bg-white rounded-2xl shadow-xl p-8 mb-16">
           <h2 className="text-3xl font-bold text-center text-gray-800 mb-12">
-            Why Choose GreenLens?
+            Why Choose AgriSense?
           </h2>
           
           <div className="grid md:grid-cols-2 gap-8">
