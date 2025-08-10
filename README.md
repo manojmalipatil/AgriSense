@@ -1,6 +1,6 @@
 # AgriSense
 
-> **AgriSense (a.k.a. GreenLens)** — an integrated agriculture assistant combining AI-powered plant disease detection, market price insights & forecasts, soil analysis, a task manager, and a voice/text chat assistant for farmers.
+> **AgriSense** — an integrated agriculture assistant combining AI-powered plant disease detection, market price insights & forecasts, soil analysis, a task manager, and a voice/text chat assistant for farmers.
 
 > **Short**: Frontend is a Vite + React + TypeScript app. Backend is a FastAPI service using TensorFlow for image-based plant disease detection and a chat endpoint that forwards to an LLM provider. The frontend persists user tasks to Supabase and handles authentication via Supabase Auth.
 
