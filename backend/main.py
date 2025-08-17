@@ -111,7 +111,7 @@ async def root():
 
 #Groq API integration
 
-GROQ_API_KEY = os.getenv("GROQ_API_KEY", "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")
+GROQ_API_KEY = os.getenv("GROQ_API_KEY", "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")
 
 class ChatRequest(BaseModel):
     message: str
