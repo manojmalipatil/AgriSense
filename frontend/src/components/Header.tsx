@@ -13,7 +13,7 @@ const Header: React.FC<HeaderProps> = ({ currentPage, onPageChange, user }) => {
     { id: 'home', label: 'Home' },
     { id: 'detect', label: 'Detect Disease' },
     { id: 'prices', label: 'Crop Prices' },
-    { id: 'soil', label: 'Soil Analysis' },
+    { id: 'resources', label: 'Learning Resources' },
     { id: 'tasks', label: 'Task Manager' },
     { id: 'climate', label: 'Climate Tools' },
     { id: 'about', label: 'About' },

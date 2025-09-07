@@ -7,7 +7,7 @@ import BackgroundElements from './components/BackgroundElements';
 import HomePage from './components/HomePage';
 import DiseaseDetection from './components/DiseaseDetection';
 import CropPrices from './components/CropPrices';
-import SoilAnalysis from './components/SoilAnalysis';
+import LearningResources from './components/LearningResources';
 import TaskManager from './components/TaskManager';
 import ClimateTools from './components/ClimateTools';
 import About from './components/About';
@@ -60,8 +60,8 @@ function App() {
         return <DiseaseDetection />;
       case 'prices':
         return <CropPrices />;
-      case 'soil':
-        return <SoilAnalysis />;
+      case 'resources':
+        return <LearningResources />;
       case 'tasks':
         return <TaskManager />;
       case 'climate':
